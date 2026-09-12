@@ -6,4 +6,4 @@ UseTab: Always              # 缩进用 tab（尽量用 tab）
 TabWidth: 4                 # 一个 tab 显示成 4 列（显示宽度）
 IndentWidth: 4              # 一个缩进层级的宽度（配合 TabWidth）
 AccessModifierOffset: -4
-ColumnLimit: 100
+ColumnLimit: 120

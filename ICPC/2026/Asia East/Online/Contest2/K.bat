@@ -1,0 +1,1 @@
+Ktest.exe > K.in
