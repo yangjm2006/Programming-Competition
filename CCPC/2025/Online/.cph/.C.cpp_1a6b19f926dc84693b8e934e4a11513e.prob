@@ -1,0 +1,1 @@
+{"name":"Local: C","url":"c:\\Users\\19673\\Desktop\\Programming-Competition\\CCPC\\2025\\Online\\C.cpp","tests":[{"id":1789732311799,"input":"2\n5 3\n1 2 3 4 5\n8 7\n3 1 4 1 5 9 2 6","output":"1\n2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\19673\\Desktop\\Programming-Competition\\CCPC\\2025\\Online\\C.cpp","group":"local","local":true}
