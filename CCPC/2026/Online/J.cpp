@@ -35,7 +35,6 @@ void solve() {
 		iin++;
 		mmax = max(ssum, mmax);
 	}
-	// cout << mmax << endl;
 	int l = sum / k, r = mmax;
 	while (l < r) {
 		int mid = (l + r) >> 1;

@@ -3,11 +3,10 @@ using namespace std;
 typedef long long ll;
 #define int long long
 
-int fac[200005];
-
-int ifac[200005];
 const int p = 998244353;
 const int inf = 4e18;
+
+int fac[200005], ifac[200005];
 int ksm(int a, int b) {
 	int ans = 1;
 	while (b > 0) {
@@ -33,10 +32,9 @@ int f(int a, int b) { return C(a + b, a); }
 
 int f2(int a, int b) { return C(a + b, b - 1); }
 
-bool cmp(int a, int b) { return a < b; }
-
 int a[200005], b[200005], s1[200005], s2[200005];
 map<int, int> mp;
+
 void solve() {
 	int n, k;
 	cin >> n >> k;
@@ -86,7 +84,6 @@ void solve() {
 signed main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-	cout.tie(nullptr);
 	fac[0] = 1;
 	for (int i = 1; i <= 200000; i++) {
 		fac[i] = fac[i - 1] * i % p;
