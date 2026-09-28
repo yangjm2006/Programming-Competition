@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int TREIS = 10000;
+const int TREIS = 100;
 
 double EX = 0;
 
@@ -37,9 +37,7 @@ void solve() {
 		}
 		tmp ^= 1;
 	}
-	// cout << ans << '\n';
 	EX += ans / TREIS;
-	// cout << EX << '\n';
 }
 
 signed main() {
