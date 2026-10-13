@@ -6,40 +6,100 @@ int E[N][N];
 vector<int> e[N];
 int n, m, S, T;
 vector<int> road[N];
-int dis[N], minn;
+int dis[N];
 vector<int> circle;
-void bfs(int s) {
+vector<pair<int, int>> p;
+void make() {
+	p.clear();
 	for (int i = 1; i <= n; i++) {
 		dis[i] = INF;
-		road[i].clear();
 	}
 	queue<int> q;
-	q.push(s);
-	dis[s] = 0;
-	road[s].push_back(s);
+	q.push(S);
+	dis[S] = 0;
+	p.push_back(make_pair(0, S));
 	while (!q.empty()) {
 		int u = q.front();
 		q.pop();
 		for (int v : e[u]) {
 			if (dis[v] > dis[u] + 1) {
 				dis[v] = dis[u] + 1;
+				q.push(v);
+				p.push_back(make_pair(dis[v], v));
+			}
+		}
+	}
+	sort(p.begin(), p.end());
+}
+bool check() {
+	for (int i = 1; i <= n; i++) {
+		dis[i] = INF;
+		road[i].clear();
+	}
+	queue<int> q;
+	q.push(S);
+	dis[S] = 0;
+	road[S].push_back(S);
+	while (!q.empty()) {
+		int u = q.front();
+		q.pop();
+		if (u == T) {
+			circle = road[u];
+			return 1;
+		}
+		for (int v : e[u]) {
+			if (u == S && v == T) continue;
+			if (dis[v] > dis[u] + 1) {
+				dis[v] = dis[u] + 1;
 				road[v] = road[u];
 				road[v].push_back(v);
 				q.push(v);
-			} else if (dis[v] == dis[u] + 1 || dis[v] == dis[u]) {
-				if (minn > dis[u] + dis[v]) {
-					minn = dis[u] + dis[v];
-					circle.clear();
-					for (int w : road[u]) {
-						circle.push_back(w);
-					}
-					for (int i = road[v].size() - 1; i >= 1; i--) {
-						circle.push_back(road[v][i]);
-					}
+			}
+		}
+	}
+	return 0;
+}
+int fat[N], form[N];
+void bfs(int s) {
+	for (int i = 1; i <= n; i++) {
+		dis[i] = INF;
+	}
+	queue<int> q;
+	dis[s] = 0;
+	for (int u : e[s]) {
+		dis[u] = 1;
+		fat[u] = s;
+		form[u] = u;
+		q.push(u);
+	}
+	int minn = INF;
+	int a = -1, b = -1;
+	while (!q.empty()) {
+		int u = q.front();
+		q.pop();
+		for (int v : e[u]) {
+			if (v == s) continue;
+			if (dis[v] > dis[u] + 1) {
+				dis[v] = dis[u] + 1;
+				fat[v] = u;
+				form[v] = form[u];
+				q.push(v);
+			} else if (form[u] != form[v]) {
+				int len = dis[u] + dis[v] + 1;
+				if (len < minn) {
+					minn = len;
+					a = u;
+					b = v;
 				}
 			}
 		}
 	}
+	if (a == -1) return;
+	circle.clear();
+	for (; a != s; a = fat[a]) circle.push_back(a);
+	circle.push_back(s);
+	reverse(circle.begin(), circle.end());
+	for (; b != s; b = fat[b]) circle.push_back(b);
 }
 bool vis[N];
 void getLoad() {
@@ -65,6 +125,9 @@ void getLoad() {
 						E[road[v][i]][road[v][i + 1]] = -1;
 						E[road[v][i + 1]][road[v][i]] = -2;
 					}
+					for (int w : road[v]) {
+						vis[w] = 1;
+					}
 					return;
 				}
 			}
@@ -73,7 +136,6 @@ void getLoad() {
 }
 void __() {
 	cin >> n >> m >> S >> T;
-	minn = INF;
 	circle.clear();
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) E[i][j] = 0;
@@ -87,9 +149,7 @@ void __() {
 		e[u].push_back(v);
 		e[v].push_back(u);
 	}
-	for (int i = 1; i <= n; i++) {
-		bfs(i);
-	}
+	make();
 	if (E[S][T] == 0) {
 		cout << "Yes\n";
 		for (int i = 1; i <= n; i++) {
@@ -100,15 +160,16 @@ void __() {
 		}
 		return;
 	}
+	if (!check()) {
+		for (auto [fk, u] : p) {
+			bfs(u);
+			if (circle.size()) break;
+		}
+	}
 	if (circle.size() == 0) {
 		cout << "No\n";
 		return;
 	}
-	// cout << circle.size() << '\n';
-	// for (int u : circle) {
-	// 	cout << u << " ";
-	// }
-	// cout << '\n';
 	for (int i = 0; i < circle.size(); i++) {
 		vis[circle[i]] = 1;
 		E[circle[i]][circle[(i + 1) % circle.size()]] = -1;
@@ -129,9 +190,10 @@ void __() {
 			E[S][T] = -2;
 		}
 	}
+	vis[S] = vis[T] = 1;
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
-			if (E[i][j] > 0 && (vis[j] || j == S || j == T)) {
+			if (E[i][j] > 0 && vis[j]) {
 				E[i][j] = -1;
 				E[j][i] = -2;
 			}
