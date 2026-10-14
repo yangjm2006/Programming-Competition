@@ -43,7 +43,7 @@ vector<Point> Mincowsky(vector<Point> p1, vector<Point> p2) {
 			j++;
 		}
 		v.push_back(p1[(i + 1) % n1] - p1[i]);
-		if (i == n1) {
+		if (i == n1 - 1) {
 			while (j < n2) {
 				v.push_back(p2[(j + 1) % n2] - p2[j]);
 				j++;
